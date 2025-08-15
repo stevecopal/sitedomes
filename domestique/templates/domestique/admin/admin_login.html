@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+{% trans "Admin Login" %}
+{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">{% trans "Admin Login" %}</h1>
+{% if form.errors %}
+    <p class="text-red-500 mb-4">{% trans "Invalid email or password. Please try again." %}</p>
+{% endif %}
+<form method="post" class="bg-white p-6 rounded shadow-md">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">{% trans "Sign In" %}</button>
+    <a href="{% url 'login' %}" class="text-gray-500 ml-4">{% trans "Use Standard Login" %}</a>
+</form>
+{% endblock %}

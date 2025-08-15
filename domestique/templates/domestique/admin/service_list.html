@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+{% trans "Service List" %}
+{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">{% trans "Service List" %}</h1>
+<a href="{% url 'admin_service_create' %}" class="bg-blue-500 text-white px-4 py-2 rounded mb-4 inline-block">{% trans "Add Service" %}</a>
+<ul class="space-y-2">
+    {% for service in services %}
+        <li class="bg-white p-4 rounded shadow">
+            <p><strong>{% trans "Name" %}:</strong> {{ service.name }}</p>
+            <p><strong>{% trans "Category" %}:</strong> {{ service.category }}</p>
+            <a href="{% url 'admin_service_edit' pk=service.id %}" class="text-blue-500 mr-2">{% trans "Edit" %}</a>
+            <a href="{% url 'admin_service_delete' pk=service.id %}" class="text-red-500">{% trans "Delete" %}</a>
+        </li>
+    {% empty %}
+        <p>{% trans "No services found." %}</p>
+    {% endfor %}
+</ul>
+{% endblock %}

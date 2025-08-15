@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+{% trans "Welcome to Copal" %}
+{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="text-4xl font-bold mb-4">{% trans "Welcome to Copal" %}</h1>
+    <p class="text-lg mb-6">{% trans "Connect with trusted service providers or offer your skills to clients in need." %}</p>
+    
+</div>
+{% endblock %}

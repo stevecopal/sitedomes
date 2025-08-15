@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+{% trans "Request List" %}
+{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">{% trans "Request List" %}</h1>
+<a href="{% url 'admin_request_create' %}" class="bg-blue-500 text-white px-4 py-2 rounded mb-4 inline-block">{% trans "Add Request" %}</a>
+<ul class="space-y-2">
+    {% for request in requests %}
+        <li class="bg-white p-4 rounded shadow">
+            <p><strong>{% trans "Client" %}:</strong> {{ request.client }}</p>
+            <p><strong>{% trans "Service" %}:</strong> {{ request.service }}</p>
+            <p><strong>{% trans "Status" %}:</strong> {{ request.get_status_display }}</p>
+            <a href="{% url 'admin_request_edit' pk=request.id %}" class="text-blue-500 mr-2">{% trans "Edit" %}</a>
+            <a href="{% url 'admin_request_delete' pk=request.id %}" class="text-red-500">{% trans "Delete" %}</a>
+        </li>
+    {% empty %}
+        <p>{% trans "No requests found." %}</p>
+    {% endfor %}
+</ul>
+{% endblock %}

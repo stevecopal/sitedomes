@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+{% trans "Provider Dashboard" %}
+{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">{% trans "Provider Dashboard" %}</h1>
+<p>{% trans "Welcome" %}, {{ user.first_name }} {{ user.last_name }}</p>
+{% if user.photo %}
+    <img src="{{ user.photo.url }}" alt="{% trans 'Profile Photo' %}" class="w-24 h-24 rounded-full mb-4">
+{% endif %}
+<p>{% trans "Accepted Requests" %}: {{ accepted_requests }}</p>
+<a href="{% url 'request_list' %}" class="bg-blue-500 text-white px-4 py-2 rounded inline-block mb-4">{% trans "View Available Requests" %}</a>
+
+<ul class="space-y-2">
+    {% for response in responses %}
+        {% if not response.request.is_expired %}
+            <li class="bg-white p-4 rounded shadow">
+                <p><strong>{% trans "Request" %}:</strong> {{ response.request }}</p>
+                <p><strong>{% trans "Message" %}:</strong> {{ response.message }}</p>
+                <p><strong>{% trans "Proposed Price" %}:</strong> {{ response.proposed_price }}</p>
+                <p><strong>{% trans "Status" %}:</strong> {{ response.get_status_display }}</p>
+            </li>
+        {% endif %}
+    {% empty %}
+        <p>{% trans "No responses found." %}</p>
+    {% endfor %}
+</ul>
+{% endblock %}

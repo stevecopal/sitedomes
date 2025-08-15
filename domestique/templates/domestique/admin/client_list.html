@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+{% trans "Client List" %}
+{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">{% trans "Client List" %}</h1>
+<div class="space-x-4 mb-4">
+    <a href="{% url 'admin_client_create' %}" class="bg-blue-500 text-white px-4 py-2 rounded inline-block">{% trans "Add Client" %}</a>
+    <a href="{% url 'admin_provider_create' %}" class="bg-blue-500 text-white px-4 py-2 rounded inline-block">{% trans "Add Provider" %}</a>
+    <a href="{% url 'admin_admin_create' %}" class="bg-blue-500 text-white px-4 py-2 rounded inline-block">{% trans "Add Administrator" %}</a>
+</div>
+<ul class="space-y-2">
+    {% for client in clients %}
+        <li class="bg-white p-4 rounded shadow">
+            <p><strong>{% trans "Name" %}:</strong> {{ client.first_name }} {{ client.last_name }}</p>
+            <p><strong>{% trans "Email" %}:</strong> {{ client.email }}</p>
+            <a href="{% url 'admin_client_edit' pk=client.id %}" class="text-blue-500 mr-2">{% trans "Edit" %}</a>
+            <a href="{% url 'admin_client_delete' pk=client.id %}" class="text-red-500">{% trans "Delete" %}</a>
+        </li>
+    {% empty %}
+        <p>{% trans "No clients found." %}</p>
+    {% endfor %}
+</ul>
+{% endblock %}

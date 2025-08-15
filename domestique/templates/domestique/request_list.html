@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+{% trans "Available Requests" %}
+{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">{% trans "Available Requests" %}</h1>
+<ul class="space-y-2">
+    {% for request in requests %}
+        <li class="bg-white p-4 rounded shadow">
+            <p><strong>{% trans "Service" %}:</strong> {{ request.service }}</p>
+            <p><strong>{% trans "Description" %}:</strong> {{ request.description }}</p>
+            <p><strong>{% trans "Price" %}:</strong> {{ request.price }}</p>
+            <a href="{% url 'response_create' request_id=request.id %}" class="bg-blue-500 text-white px-4 py-2 rounded inline-block">{% trans "Respond" %}</a>
+        </li>
+    {% empty %}
+        <p>{% trans "No requests available." %}</p>
+    {% endfor %}
+</ul>
+{% endblock %}

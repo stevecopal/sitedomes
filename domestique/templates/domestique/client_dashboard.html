@@ -3,36 +3,68 @@
 {% load i18n %}
 
 {% block title %}
-{% trans "Client Dashboard" %}
+Client Dashboard
 {% endblock %}
 
 {% block content %}
-<h1 class="text-2xl font-bold mb-4">{% trans "Client Dashboard" %}</h1>
-<p>{% trans "Welcome" %}, {{ user.first_name }} {{ user.last_name }}</p>
-<p>{% trans "Unread Responses" %}: {{ unread_responses }}</p>
-<a href="{% url 'request_create' %}" class="bg-blue-500 text-white px-4 py-2 rounded inline-block mb-4">{% trans "Create Request" %}</a>
-<
-<ul class="space-y-2">
-    {% for request in requests %}
-        {% if not request.is_expired %}
-            <li class="bg-white p-4 rounded shadow">
-                <p><strong>{% trans "Service" %}:</strong> {{ request.service }}</p>
-                <p><strong>{% trans "Description" %}:</strong> {{ request.description }}</p>
-                <p><strong>{% trans "Location" %}:</strong> {{ request.location }}</p>
-                <p><strong>{% trans "Price" %}:</strong> {{ request.price }}</p>
-                <p><strong>{% trans "Task Date" %}:</strong> {{ request.task_date|date:"Y-m-d H:i" }}</p>
-                <p><strong>{% trans "Status" %}:</strong> {{ request.get_status_display }}</p>
-                {% if request.status == 'PENDING' %}
-                    {% for response in request.responses.all %}
-                        <p><strong>{% trans "Response from" %} {{ response.provider }}:</strong> {{ response.message }} ({{ response.proposed_price }})</p>
-                        <a href="{% url 'request_accept' request_id=request.id provider_id=response.provider.id %}" class="text-blue-500 mr-2">{% trans "Accept" %}</a>
-                        <a href="{% url 'request_reject' pk=response.id %}" class="text-red-500">{% trans "Reject" %}</a>
-                    {% endfor %}
-                {% endif %}
-            </li>
-        {% endif %}
-    {% empty %}
-        <p>{% trans "No requests found." %}</p>
-    {% endfor %}
-</ul>
+<div class="container mx-auto px-4 py-8">
+
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-8">
+        <div>
+            <h1 class="text-3xl font-bold text-[#2E8B57] mb-2">Client Dashboard</h1>
+            <p class="text-gray-600 mt-1">Unread Responses: <span class="font-semibold">{{ unread_responses }}</span></p>
+        </div>
+        <div class="mt-4 md:mt-0">
+            <a href="{% url 'request_create' %}" 
+               class="bg-[#FF6B35] hover:bg-[#E05A2B] text-white font-semibold px-6 py-3 rounded-lg shadow-md transition duration-300">
+                Create Request
+            </a>
+        </div>
+    </div>
+
+    <!-- Requests List -->
+    <ul class="space-y-6">
+        {% for request in requests %}
+            {% if not request.is_expired %}
+                <li class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition duration-300">
+                    <div class="mb-4">
+                        <p><strong class="text-[#2E8B57]">Service:</strong> {{ request.service }}</p>
+                        <p><strong class="text-[#2E8B57]">Description:</strong> {{ request.description }}</p>
+                        <p><strong class="text-[#2E8B57]">Location:</strong> {{ request.location }}</p>
+                        <p><strong class="text-[#2E8B57]">Price:</strong> {{ request.price }}</p>
+                        <p><strong class="text-[#2E8B57]">Task Date:</strong> {{ request.task_date|date:"Y-m-d H:i" }}</p>
+                        <p><strong class="text-[#2E8B57]">Status:</strong> {{ request.get_status_display }}</p>
+                    </div>
+
+                    {% if request.status == 'PENDING' %}
+                        <div class="mt-4 border-t border-gray-200 pt-4 space-y-3">
+                            {% for response in request.responses.all %}
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <p>
+                                        <strong class="text-[#2E8B57]">Response from {{ response.provider }}:</strong>
+                                        {{ response.message }} ({{ response.proposed_price }})
+                                    </p>
+                                    <div class="mt-2 flex space-x-2">
+                                        <a href="{% url 'request_accept' request_id=request.id provider_id=response.provider.id %}" 
+                                           class="bg-[#2E8B57] hover:bg-green-700 text-white px-4 py-2 rounded-lg transition duration-300">
+                                           Accept
+                                        </a>
+                                        <a href="{% url 'request_reject' pk=response.id %}" 
+                                           class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition duration-300">
+                                           Reject
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </li>
+            {% endif %}
+        {% empty %}
+            <p class="text-gray-600 text-center">No requests found.</p>
+        {% endfor %}
+    </ul>
+
+</div>
 {% endblock %}

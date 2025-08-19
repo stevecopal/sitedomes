@@ -4,24 +4,79 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import gettext_lazy as _
 from parler.forms import TranslatableModelForm
 from domestique.models import Client, Provider, Admin, Service
+from django.contrib.auth import authenticate
 
 class UserRegistrationForm(forms.Form):
-    first_name = forms.CharField(label=_('First Name'))
-    last_name = forms.CharField(label=_('Last Name'))
-    email = forms.EmailField(label=_('Email'))
-    phone = forms.CharField(label=_('Phone'))
-    address = forms.CharField(widget=forms.Textarea, label=_('Address'))
-    photo = forms.ImageField(label=_('Photo'), required=False)
-    password = forms.CharField(widget=forms.PasswordInput, label=_('Password'))
-    password_confirm = forms.CharField(widget=forms.PasswordInput, label=_('Confirm Password'))
-    role = forms.ChoiceField(choices=(('CLIENT', 'Client'), ('PROVIDER', 'Provider')), label=_('Role'))
+    first_name = forms.CharField(
+        label=_('First Name'),
+        widget=forms.TextInput(attrs={
+            'class': 'form-input block w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E8B57] focus:border-[#2E8B57]',
+            'placeholder': _('Enter your first name')
+        })
+    )
+    last_name = forms.CharField(
+        label=_('Last Name'),
+        widget=forms.TextInput(attrs={
+            'class': 'form-input block w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E8B57] focus:border-[#2E8B57]',
+            'placeholder': _('Enter your last name')
+        })
+    )
+    email = forms.EmailField(
+        label=_('Email'),
+        widget=forms.EmailInput(attrs={
+            'class': 'form-input block w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E8B57] focus:border-[#2E8B57]',
+            'placeholder': _('Enter your email')
+        })
+    )
+    phone = forms.CharField(
+        label=_('Phone'),
+        widget=forms.TextInput(attrs={
+            'class': 'form-input block w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E8B57] focus:border-[#2E8B57]',
+            'placeholder': _('Enter your phone number')
+        })
+    )
+    address = forms.CharField(
+        label=_('Address'),
+        widget=forms.Textarea(attrs={
+            'class': 'form-textarea block w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E8B57] focus:border-[#2E8B57]',
+            'placeholder': _('Enter your address'),
+            'rows': 3
+        })
+    )
+    photo = forms.ImageField(
+        label=_('Photo'),
+        required=False
+    )
+    password = forms.CharField(
+        label=_('Password'),
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-input block w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E8B57] focus:border-[#2E8B57]',
+            'placeholder': _('Enter your password')
+        })
+    )
+    password_confirm = forms.CharField(
+        label=_('Confirm Password'),
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-input block w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E8B57] focus:border-[#2E8B57]',
+            'placeholder': _('Confirm your password')
+        })
+    )
+    role = forms.ChoiceField(
+        label=_('Role'),
+        choices=(('CLIENT', _('Client')), ('PROVIDER', _('Provider'))),
+        widget=forms.Select(attrs={
+            'class': 'form-select block w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E8B57] focus:border-[#2E8B57]'
+        })
+    )
 
     def clean(self):
         cleaned_data = super().clean()
         password = cleaned_data.get('password')
         password_confirm = cleaned_data.get('password_confirm')
-        if password != password_confirm:
-            raise forms.ValidationError(_('Passwords do not match'))
+
+        if password and password_confirm and password != password_confirm:
+            self.add_error('password_confirm', _('Passwords do not match'))
+
         return cleaned_data
 
     def save(self):
@@ -35,15 +90,46 @@ class UserRegistrationForm(forms.Form):
             'photo': self.cleaned_data.get('photo'),
             'role': role,
         }
+
         if role == 'CLIENT':
-            user = Client.objects.create_user(password=self.cleaned_data['password'], **user_data)
+            user = Client.objects.create_user(
+                password=self.cleaned_data['password'],
+                **user_data
+            )
         elif role == 'PROVIDER':
-            user = Provider.objects.create_user(password=self.cleaned_data['password'], **user_data)
+            user = Provider.objects.create_user(
+                password=self.cleaned_data['password'],
+                **user_data
+            )
         return user
 
 class UserLoginForm(AuthenticationForm):
-    username = forms.EmailField(label=_('Email'))
-    password = forms.CharField(widget=forms.PasswordInput, label=_('Password'))
+    username = forms.CharField(
+        label=_("Email"),
+        widget=forms.TextInput(attrs={
+            'class': 'w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#2E8B57]',
+            'placeholder': _('Enter your email')
+        })
+    )
+    password = forms.CharField(
+        label=_("Password"),
+        widget=forms.PasswordInput(attrs={
+            'class': 'w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#2E8B57]',
+            'placeholder': _('Enter your password')
+        })
+    )
+
+    def clean(self):
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+
+        if username and password:
+            user = authenticate(self.request, username=username, password=password)
+            if user is None:
+                raise forms.ValidationError(_("Invalid email or password"), code='invalid_login')
+
+        return super().clean()
+
 
 class ServiceForm(TranslatableModelForm):
     class Meta:

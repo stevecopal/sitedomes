@@ -3,13 +3,71 @@
 {% load i18n %}
 
 {% block title %}
-{% trans "Welcome to Copal" %}
+Welcome to Copal
 {% endblock %}
 
 {% block content %}
-<div class="text-center">
-    <h1 class="text-4xl font-bold mb-4">{% trans "Welcome to Copal" %}</h1>
-    <p class="text-lg mb-6">{% trans "Connect with trusted service providers or offer your skills to clients in need." %}</p>
-    
+<div class="bg-gray-50">
+
+    <!-- Hero Section -->
+    <section class="bg-white py-16 px-6 text-center shadow-md">
+        <h1 class="text-4xl md:text-5xl font-bold text-[#2E8B57] mb-4">
+            Connect. Collaborate. Grow.
+        </h1>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-6">
+            Find trusted domestic service providers or offer your skills to clients who need them. 
+            Copal makes it simple, secure, and efficient.
+        </p>
+        <a href="{% url 'register' %}" 
+           class="bg-[#FF6B35] hover:bg-[#E05A2B] text-white font-semibold px-8 py-3 rounded-lg transition duration-300 shadow-lg">
+            Get Started
+        </a>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-16 px-6 max-w-6xl mx-auto grid gap-10 md:grid-cols-3 text-center">
+        <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition duration-300">
+            <img src="{% static 'images/trusted.svg' %}" alt="Trusted Providers" class="mx-auto h-20 mb-6">
+            <h3 class="text-xl font-bold text-[#2E8B57] mb-4">Trusted Professionals</h3>
+            <p class="text-gray-600">
+                All providers are verified to ensure safety, reliability, and high-quality service.
+            </p>
+        </div>
+        <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition duration-300">
+            <img src="{% static 'images/easy.svg' %}" alt="Easy to Use" class="mx-auto h-20 mb-6">
+            <h3 class="text-xl font-bold text-[#2E8B57] mb-4">Easy to Use</h3>
+            <p class="text-gray-600">
+                Post your needs, receive offers, and hire in just a few clicks with our simple interface.
+            </p>
+        </div>
+        <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition duration-300">
+            <img src="{% static 'images/secure.svg' %}" alt="Secure Payments" class="mx-auto h-20 mb-6">
+            <h3 class="text-xl font-bold text-[#2E8B57] mb-4">Secure Payments</h3>
+            <p class="text-gray-600">
+                Pay securely through Copal’s platform with full transparency and protection.
+            </p>
+        </div>
+    </section>
+
+    <!-- About / Illustration Section -->
+    <section class="bg-[#2E8B57] py-16 px-6 text-white">
+        <div class="max-w-6xl mx-auto grid gap-12 md:grid-cols-2 items-center">
+            <div>
+                <h2 class="text-3xl font-bold mb-6">Why Choose Copal?</h2>
+                <p class="mb-6 text-lg">
+                    Whether you are a client looking for reliable services or a professional offering your skills, Copal bridges the gap. 
+                    We connect people with trust, efficiency, and professionalism at the heart of everything we do.
+                </p>
+                <a href="{% url 'register' %}" 
+                   class="bg-white text-[#2E8B57] font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-gray-100 transition duration-300">
+                    Join Now
+                </a>
+            </div>
+            <div>
+                <img src="{% static 'images/hero-image.svg' %}" alt="Copal Services" class="rounded-2xl shadow-lg">
+            </div>
+        </div>
+    </section>
+
 </div>
 {% endblock %}

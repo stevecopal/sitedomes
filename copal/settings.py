@@ -44,8 +44,12 @@ INSTALLED_APPS = [
     
     'parler',  # For translations
     # 'tailwind',  # For Tailwind CSS
-    'domestique', 
+    'domestique',
+    'widget_tweaks', 
+     "tailwind",
+    "theme",    
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -148,3 +152,9 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'domestique.User'
+
+TAILWIND_APP_NAME = "theme"
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]

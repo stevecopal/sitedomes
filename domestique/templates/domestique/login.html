@@ -2,18 +2,43 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}
-{% trans "Sign In" %}
-{% endblock %}
+{% block title %}Sign In{% endblock %}
 
 {% block content %}
-<h1 class="text-2xl font-bold mb-4">{% trans "Sign In" %}</h1>
-{% if form.errors %}
-    <p class="text-red-500 mb-4">{% trans "Invalid email or password. Please try again." %}</p>
-{% endif %}
-<form method="post" class="bg-white p-6 rounded shadow-md">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">{% trans "Sign In" %}</button>
-</form>
+<div class="flex justify-center items-center min-h-screen bg-gray-50 px-4">
+    <div class="w-full max-w-md">
+
+        <!-- Title -->
+        <h1 class="text-3xl font-bold text-[#2E8B57] mb-8 text-center">
+            {% trans "Login" %}
+        </h1>
+
+        <!-- Error message -->
+        {% if form.non_field_errors %}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+            {{ form.non_field_errors.0 }}
+        </div>
+        {% endif %}
+        <!-- Form -->
+        <form method="post" class="bg-white p-8 rounded-2xl shadow-lg space-y-6">
+            {% csrf_token %}
+            {{ form.username }}
+            {{ form.password }}
+
+            <!-- Submit -->
+            <button type="submit"
+                class="w-full bg-[#FF6B35] hover:bg-[#E05A2B] text-white font-semibold py-3 rounded-lg transition duration-300">
+                {% trans "Login" %}
+            </button>
+
+            <!-- Signup link -->
+            <p class="text-sm text-gray-600 text-center mt-4">
+                {% trans "Don't have an account?" %}
+                <a href="{% url 'register' %}" class="text-[#2E8B57] font-medium hover:underline">
+                    {% trans "Register" %}
+                </a>
+            </p>
+        </form>
+    </div>
+</div>
 {% endblock %}

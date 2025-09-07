@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+{% trans "Provider List" %}
+{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">{% trans "Provider List" %}</h1>
+<a href="{% url 'admin_provider_create' %}" class="bg-blue-500 text-white px-4 py-2 rounded mb-4 inline-block">{% trans "Add Provider" %}</a>
+<ul class="space-y-2">
+    {% for provider in providers %}
+        <li class="bg-white p-4 rounded shadow">
+            <p><strong>{% trans "Name" %}:</strong> {{ provider.first_name }} {{ provider.last_name }}</p>
+            <p><strong>{% trans "Email" %}:</strong> {{ provider.email }}</p>
+            <p><strong>{% trans "Approved" %}:</strong> {{ provider.is_approved|yesno:"Yes,No" }}</p>
+            <a href="{% url 'admin_provider_edit' pk=provider.id %}" class="text-blue-500 mr-2">{% trans "Edit" %}</a>
+            <a href="{% url 'admin_provider_delete' pk=provider.id %}" class="text-red-500">{% trans "Delete" %}</a>
+        </li>
+    {% empty %}
+        <p>{% trans "No providers found." %}</p>
+    {% endfor %}
+</ul>
+{% endblock %}

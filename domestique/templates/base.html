@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+{% load static %}
+{% load i18n %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% block title %}{% trans "Copal - Cameroonian Professional Network" %}{% endblock %}
+    </title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS (local styles.css + fallback CDN) -->
+    <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white font-sans text-gray-800 antialiased flex flex-col min-h-screen">
+
+    <!-- NAVBAR -->
+    <nav class="bg-blue-800 text-white shadow-lg">
+        <div class="container mx-auto px-5 py-5 flex items-center justify-between">
+
+            <!-- Logo -->
+            <a href="{% url 'home' %}" class="flex items-center space-x-2 text-2xl font-bold tracking-tight">
+                <span>{% trans "Copal" %}</span>
+                <span class="bg-orange-500 text-white text-xs px-2 py-1 rounded-full">{% trans "Services" %}</span>
+            </a>
+
+            <!-- Language Selector (Desktop) -->
+            <div class="hidden md:flex items-center space-x-2 mr-6">
+                <!-- FR -->
+                <form method="post" action="{% url 'set_language' %}" class="flex items-center">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                    <input type="hidden" name="language" value="fr">
+                    <button type="submit"
+                        class="px-3 py-1 rounded-lg text-sm font-medium hover:bg-blue-700 transition-all
+                               {% if LANGUAGE_CODE == 'fr' %} bg-blue-700 border border-white {% endif %}">
+                        FR
+                    </button>
+                </form>
+
+                <span class="text-blue-300">|</span>
+
+                <!-- EN -->
+                <form method="post" action="{% url 'set_language' %}" class="flex items-center">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                    <input type="hidden" name="language" value="en">
+                    <button type="submit"
+                        class="px-3 py-1 rounded-lg text-sm font-medium hover:bg-blue-700 transition-all
+                               {% if LANGUAGE_CODE == 'en' %} bg-blue-700 border border-white {% endif %}">
+                        EN
+                    </button>
+                </form>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-button"
+                class="md:hidden p-2 rounded-lg hover:bg-blue-700 transition-colors"
+                aria-label="Mobile menu">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
+
+            <!-- Menu Desktop -->
+            <div class="hidden md:flex items-center space-x-4">
+                {% if user.is_authenticated %}
+                    <div class="flex items-center space-x-4">
+                        <span class="text-sm font-medium">
+                            {% trans "Welcome" %}, <strong class="text-orange-300">{{ user.first_name }}</strong>
+                        </span>
+                        <div class="h-6 w-px bg-blue-600"></div>
+                        <a href="#" class="text-sm hover:text-orange-300 transition-colors">{% trans "Profile" %}</a>
+                        <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button type="submit"
+                                class="bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-lg text-sm font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                                {% trans "Logout" %}
+                            </button>
+                        </form>
+                    </div>
+                {% else %}
+                    <div class="flex items-center space-x-3">
+                        <a href="{% url 'home' %}" class="bg-white text-blue-800 hover:bg-gray-100 px-4 py-2 rounded-lg text-sm font-medium shadow-md">{% trans "Home" %}</a>
+                        <a href="{% url 'login' %}" class="bg-white text-blue-800 hover:bg-gray-100 px-4 py-2 rounded-lg text-sm font-medium shadow-md">{% trans "Login" %}</a>
+                        <a href="{% url 'register' %}" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-md hover:shadow-lg">{% trans "Register" %}</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden bg-blue-700 text-white shadow-xl hidden transition-all duration-300 ease-in-out">
+            <div class="px-4 py-4 flex flex-col space-y-3">
+
+                <!-- Language Selector (Mobile) -->
+                <div class="flex justify-center space-x-4 pb-3 border-b border-blue-600">
+                    <form method="post" action="{% url 'set_language' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                        <input type="hidden" name="language" value="fr">
+                        <button type="submit"
+                            class="px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-600
+                                   {% if LANGUAGE_CODE == 'fr' %} bg-blue-600 border border-white {% endif %}">
+                            Français
+                        </button>
+                    </form>
+                    <form method="post" action="{% url 'set_language' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                        <input type="hidden" name="language" value="en">
+                        <button type="submit"
+                            class="px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-600
+                                   {% if LANGUAGE_CODE == 'en' %} bg-blue-600 border border-white {% endif %}">
+                            English
+                        </button>
+                    </form>
+                </div>
+
+                {% if user.is_authenticated %}
+                    <div class="px-4 py-2 bg-blue-600 rounded-lg">
+                        <span class="text-sm font-medium">
+                            {% trans "Logged in as" %} <strong class="text-orange-300">{{ user.first_name }}</strong>
+                        </span>
+                    </div>
+                    <a href="#" class="px-4 py-3 rounded-lg hover:bg-blue-600">{% trans "My Profile" %}</a>
+                    <a href="#" class="px-4 py-3 rounded-lg hover:bg-blue-600">{% trans "Settings" %}</a>
+                    <form method="post" action="{% url 'logout' %}" data-close-menu>
+                        {% csrf_token %}
+                        <button type="submit" class="w-full px-4 py-3 rounded-lg bg-orange-500 hover:bg-orange-600">
+                            {% trans "Logout" %}
+                        </button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'home' %}" data-close-menu class="px-4 py-3 rounded-lg bg-blue-600 hover:bg-blue-500 font-medium">{% trans "Home" %}</a>
+                    <a href="{% url 'login' %}" data-close-menu class="px-4 py-3 rounded-lg bg-blue-600 hover:bg-blue-500 font-medium">{% trans "Login" %}</a>
+                    <a href="{% url 'register' %}" data-close-menu class="px-4 py-3 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-medium">{% trans "Register" %}</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Loader (Spinner) -->
+    <div id="loader" class="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-[1000] hidden">
+        <div class="w-20 h-20 border-8 border-gray-200 border-t-blue-800 rounded-full animate-spin"></div>
+    </div>
+
+    <!-- MAIN -->
+    <main class="flex-grow container mx-auto px-4 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-blue-800 text-white pt-12 pb-6 mt-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+                
+                <!-- Logo + description -->
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <span class="text-2xl font-bold">Copal</span>
+                        <span class="bg-orange-500 text-xs px-2 py-1 rounded-full">{% trans "Services" %}</span>
+                    </div>
+                    <p class="text-sm text-blue-100 mb-4 max-w-xs">{% trans "The reference professional and social network in Cameroon" %}</p>
+                </div>
+
+                <!-- Navigation -->
+                <div>
+                    <h4 class="font-semibold text-lg mb-4">{% trans "Navigation" %}</h4>
+                    <ul class="space-y-3 text-blue-100">
+                        <li><a href="#" class="hover:text-orange-300">{% trans "Home" %}</a></li>
+                        <li><a href="#" class="hover:text-orange-300">{% trans "Profiles" %}</a></li>
+                        <li><a href="#" class="hover:text-orange-300">{% trans "Jobs" %}</a></li>
+                        <li><a href="#" class="hover:text-orange-300">{% trans "Events" %}</a></li>
+                        <li><a href="#" class="hover:text-orange-300">{% trans "Blog" %}</a></li>
+                    </ul>
+                </div>
+
+                <!-- Legal -->
+                <div>
+                    <h4 class="font-semibold text-lg mb-4">{% trans "Legal" %}</h4>
+                    <ul class="space-y-3 text-blue-100">
+                        <li><a href="#" class="hover:text-orange-300">{% trans "Terms of Use" %}</a></li>
+                        <li><a href="#" class="hover:text-orange-300">{% trans "Privacy Policy" %}</a></li>
+                        <li><a href="#" class="hover:text-orange-300">{% trans "Cookies" %}</a></li>
+                        <li><a href="#" class="hover:text-orange-300">{% trans "Legal Notice" %}</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div>
+                    <h4 class="font-semibold text-lg mb-4">{% trans "Contact" %}</h4>
+                    <ul class="space-y-3 text-blue-100">
+                        <li>contact@copal.cm</li>
+                        <li>+237 6XX XXX XXX</li>
+                        <li>Yaoundé, Cameroon</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-blue-700 pt-6 mt-6 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-sm text-blue-200">&copy; {% now "Y" %} Copal. {% trans "All rights reserved." %}</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="text-blue-200 hover:text-orange-300 text-sm">{% trans "Accessibility" %}</a>
+                    <a href="#" class="text-blue-200 hover:text-orange-300 text-sm">{% trans "Sitemap" %}</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script>
+        (function () {
+            // Script pour le menu mobile
+            const btn = document.getElementById('mobile-menu-button');
+            const menu = document.getElementById('mobile-menu');
+            const closeMenuItems = document.querySelectorAll('[data-close-menu]');
+
+            btn.addEventListener('click', () => {
+                menu.classList.toggle('hidden');
+                document.body.style.overflow = menu.classList.contains('hidden') ? '' : 'hidden';
+            });
+
+            closeMenuItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    menu.classList.add('hidden');
+                    document.body.style.overflow = '';
+                });
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!menu.classList.contains('hidden') &&
+                    !menu.contains(e.target) &&
+                    !btn.contains(e.target)) {
+                    menu.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }
+            });
+
+            // Script pour afficher le loader au clic sur les liens
+            document.querySelectorAll('a[href]').forEach(function(link) {
+                link.addEventListener('click', function(event) {
+                    const href = link.getAttribute('href');
+                    // Ignorer les ancres, liens externes, formulaires, et liens avec data-no-loader
+                    if (href && !href.startsWith('#') && !link.getAttribute('target') && !link.getAttribute('data-no-loader') && !link.closest('form')) {
+                        event.preventDefault();
+                        document.getElementById('loader').classList.remove('hidden');
+                        setTimeout(function() {
+                            document.getElementById('loader').classList.add('hidden'); // Cacher le loader après redirection
+                            window.location.href = href;
+                        }, 500); // Délai maximum de 3 secondes
+                    }
+                });
+            });
+        })();
+    </script>
+</body>
+</html>

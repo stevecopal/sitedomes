@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+Provider Dashboard
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-8">
+        <div class="flex items-center space-x-4 mb-4 md:mb-0">
+            {% if user.photo %}
+                <img src="{{ user.photo.url }}" alt="Profile Photo" class="w-24 h-24 rounded-full shadow-md">
+            {% endif %}
+            <div>
+                <h1 class="text-3xl font-bold text-[#2E8B57] mb-1">Provider Dashboard</h1>
+                <p class="text-gray-700 text-lg">Welcome, <strong>{{ user.first_name }} {{ user.last_name }}</strong></p>
+                <p class="text-gray-600 mt-1">Accepted Requests: <span class="font-semibold">{{ accepted_requests }}</span></p>
+            </div>
+        </div>
+        <div>
+            <a href="{% url 'request_list' %}" 
+               class="bg-[#FF6B35] hover:bg-[#E05A2B] text-white font-semibold px-6 py-3 rounded-lg shadow-md transition duration-300">
+               View Available Requests
+            </a>
+        </div>
+    </div>
+
+    <!-- Responses List -->
+    <ul class="space-y-6">
+        {% for response in responses %}
+            {% if not response.request.is_expired %}
+                <li class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition duration-300">
+                    <div class="mb-4">
+                        <p><strong class="text-[#2E8B57]">Request:</strong> {{ response.request }}</p>
+                        <p><strong class="text-[#2E8B57]">Message:</strong> {{ response.message }}</p>
+                        <p><strong class="text-[#2E8B57]">Proposed Price:</strong> {{ response.proposed_price }}</p>
+                        <p><strong class="text-[#2E8B57]">Status:</strong> {{ response.get_status_display }}</p>
+                    </div>
+                </li>
+            {% endif %}
+        {% empty %}
+            <p class="text-gray-600 text-center">No responses found.</p>
+        {% endfor %}
+    </ul>
+
+</div>
+{% endblock %}

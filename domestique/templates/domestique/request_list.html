@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+Available Requests
+{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 py-10">
+
+    <h1 class="text-3xl font-bold text-[#2E8B57] mb-8 text-center">
+        Available Requests
+    </h1>
+
+    {% if requests %}
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {% for request in requests %}
+        <div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition duration-300">
+            <p><strong class="text-[#2E8B57]">Service:</strong> {{ request.service }}</p>
+            <p><strong class="text-[#2E8B57]">Description:</strong> {{ request.description }}</p>
+            <p><strong class="text-[#2E8B57]">Price:</strong> {{ request.price }}</p>
+            <div class="mt-4">
+                <a href="{% url 'response_create' request_id=request.id %}" 
+                   class="w-full inline-block text-center bg-[#FF6B35] hover:bg-[#E05A2B] text-white font-semibold py-2 px-4 rounded-lg transition duration-300 shadow-md">
+                    Respond
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-center text-gray-500 mt-6">No requests available.</p>
+    {% endif %}
+
+</div>
+{% endblock %}

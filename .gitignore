@@ -2,3 +2,4 @@ virtuel/
 .env
 db.sqlite3
 __py
+venv/

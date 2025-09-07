@@ -45,9 +45,9 @@ INSTALLED_APPS = [
     'parler',  # For translations
     # 'tailwind',  # For Tailwind CSS
     'domestique',
-    'widget_tweaks', 
-     "tailwind",
-    "theme",    
+    # 'widget_tweaks', 
+    #  "tailwind",
+    # "theme",    
 ]
 
 
